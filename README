@@ -256,8 +256,7 @@ Bu 1 ta JOIN so'rovi bilan barcha bog'liq ma'lumotlarni olib keladi.
 
 | Tur | Link |
 |-----|------|
-| 📮 Postman | [Postman Documentation](https://documenter.getpostman.com/view/54867148/2sBXwyFmmU) |
-| 📄 Swagger UI | [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/) |
-| 🔧 Swagger Schema | [http://127.0.0.1:8000/api/schema/](http://127.0.0.1:8000/api/schema/) |
+| 📮 Postman | https://documenter.getpostman.com/view/54867148/2sBXwyFmmU |
+| 📄 Swagger UI | http://127.0.0.1:8000/api/docs/ |
 
 ---

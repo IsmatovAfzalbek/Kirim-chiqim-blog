@@ -1,0 +1,263 @@
+# 💰 Budget Tracker API
+
+Django REST Framework yordamida qurilgan professional darajadagi shaxsiy moliya boshqaruv tizimi.
+
+---
+
+## 🚀 Texnologiyalar
+
+| Texnologiya | Versiya |
+|---|---|
+| Python | 3.12 |
+| Django | 6.0+ |
+| Django REST Framework | 3.14+ |
+| PostgreSQL | 15+ |
+| JWT (SimpleJWT) | — |
+| drf-spectacular (Swagger) | — |
+| django-filter | — |
+| python-environs | — |
+| requests | — |
+| python-dateutil | — |
+
+---
+
+## 📁 Loyiha Strukturasi
+
+```
+budget_tracker/
+├── apps/
+│   ├── app_users/          # Foydalanuvchilar, JWT autentifikatsiya
+│   ├── app_currencies/     # Valyutalar va CBU kurslari
+│   ├── app_accounts/       # Hisob raqamlar (cash, card, bank)
+│   ├── app_categories/     # Daromad/xarajat kategoriyalari
+│   ├── app_transactions/   # Tranzaksiyalar va takrorlanuvchi to'lovlar
+│   ├── app_reports/        # Kunlik, haftalik, oylik, yillik hisobotlar
+│   └── app_dashboard/      # Umumiy moliyaviy ko'rinish
+├── config/
+│   └── settings.py
+├── manage.py
+├── requirements.txt
+└── .env
+```
+
+---
+
+## ⚙️ O'rnatish
+
+### 1. Repositoriyani klonlash
+
+```bash
+git clone https://github.com/username/budget_tracker.git
+cd budget_tracker
+```
+
+### 2. Virtual muhit yaratish
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+source .venv/bin/activate  # Linux/Mac
+```
+
+### 3. Kerakli kutubxonalarni o'rnatish
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. `.env` faylini sozlash
+
+`.env` faylini yarating va quyidagilarni to'ldiring:
+
+```env
+DB_NAME=budget_tracker
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+### 5. Ma'lumotlar bazasini sozlash
+
+```bash
+python manage.py migrate
+```
+
+### 6. Superuser yaratish
+
+```bash
+python manage.py createsuperuser
+```
+
+### 7. Serverni ishga tushirish
+
+```bash
+python manage.py runserver
+```
+
+---
+
+## 🔑 Autentifikatsiya
+
+Loyihada **JWT (JSON Web Token)** autentifikatsiyasi ishlatilgan.
+
+- Barcha so'rovlarda `Authorization: Bearer <access_token>` header qo'shilishi kerak.
+- Access token muddati: **60 daqiqa**
+- Refresh token muddati: **1 kun**
+
+---
+
+## 📌 API Endpointlar
+
+### 👤 Foydalanuvchilar (`/api/users/`)
+
+| Method | Endpoint | Tavsif |
+|--------|----------|--------|
+| POST | `/api/users/register/` | Ro'yxatdan o'tish |
+| POST | `/api/users/login/` | Tizimga kirish |
+| POST | `/api/users/token/refresh/` | Tokenni yangilash |
+| GET | `/api/users/profile/` | Profilni ko'rish |
+| PATCH | `/api/users/profile/` | Profilni yangilash |
+| DELETE | `/api/users/profile/` | Akkauntni deaktiv qilish |
+
+---
+
+### 💱 Valyutalar (`/api/currencies/`)
+
+| Method | Endpoint | Tavsif |
+|--------|----------|--------|
+| GET | `/api/currencies/list/` | Barcha valyutalar |
+| POST | `/api/currencies/list/` | Yangi valyuta qo'shish |
+| GET | `/api/currencies/detail/<pk>/` | Bitta valyuta |
+| PATCH | `/api/currencies/detail/<pk>/` | Valyutani yangilash |
+| DELETE | `/api/currencies/detail/<pk>/` | Valyutani o'chirish |
+| POST | `/api/currencies/rates/fetch/` | CBU dan kurs olish (Admin) |
+
+---
+
+### 🏦 Hisoblar (`/api/accounts/`)
+
+| Method | Endpoint | Tavsif |
+|--------|----------|--------|
+| GET | `/api/accounts/list/` | Barcha hisoblar |
+| POST | `/api/accounts/list/` | Yangi hisob yaratish |
+| GET | `/api/accounts/detail/<pk>/` | Bitta hisob |
+| PATCH | `/api/accounts/detail/<pk>/` | Hisobni yangilash |
+| DELETE | `/api/accounts/detail/<pk>/` | Hisobni o'chirish |
+
+---
+
+### 🗂️ Kategoriyalar (`/api/categories/`)
+
+| Method | Endpoint | Tavsif |
+|--------|----------|--------|
+| GET | `/api/categories/list/` | Barcha kategoriyalar |
+| POST | `/api/categories/list/` | Yangi kategoriya |
+| GET | `/api/categories/detail/<pk>/` | Bitta kategoriya |
+| PATCH | `/api/categories/detail/<pk>/` | Kategoriyani yangilash |
+| DELETE | `/api/categories/detail/<pk>/` | Kategoriyani o'chirish |
+
+---
+
+### 💸 Tranzaksiyalar (`/api/transactions/`)
+
+| Method | Endpoint | Tavsif |
+|--------|----------|--------|
+| GET | `/api/transactions/list/` | Barcha tranzaksiyalar (filter bilan) |
+| POST | `/api/transactions/list/` | Yangi tranzaksiya |
+| GET | `/api/transactions/detail/<pk>/` | Bitta tranzaksiya |
+| PATCH | `/api/transactions/detail/<pk>/` | Tranzaksiyani yangilash |
+| DELETE | `/api/transactions/detail/<pk>/` | Tranzaksiyani o'chirish |
+| GET | `/api/transactions/recurring/list/` | Takrorlanuvchi tranzaksiyalar |
+| POST | `/api/transactions/recurring/list/` | Yangi takrorlanuvchi tranzaksiya |
+| GET | `/api/transactions/recurring/detail/<pk>/` | Bitta takrorlanuvchi tranzaksiya |
+| PATCH | `/api/transactions/recurring/detail/<pk>/` | Yangilash |
+| DELETE | `/api/transactions/recurring/detail/<pk>/` | O'chirish |
+
+#### 🔍 Filtering parametrlari
+
+```
+GET /api/transactions/list/?transaction_type=income
+GET /api/transactions/list/?category=1
+GET /api/transactions/list/?account=1
+GET /api/transactions/list/?date_from=2026-06-01&date_to=2026-06-30
+```
+
+---
+
+### 📊 Hisobotlar (`/api/reports/`)
+
+| Method | Endpoint | Tavsif |
+|--------|----------|--------|
+| GET | `/api/reports/daily/` | Kunlik hisobot |
+| GET | `/api/reports/weekly/` | Haftalik hisobot |
+| GET | `/api/reports/monthly/` | Oylik hisobot |
+| GET | `/api/reports/yearly/` | Yillik hisobot |
+
+#### Parametrlar
+
+```
+GET /api/reports/daily/?date=2026-06-25
+GET /api/reports/monthly/?year=2026&month=06
+GET /api/reports/yearly/?year=2026
+```
+
+---
+
+### 🏠 Dashboard (`/api/dashboard/`)
+
+| Method | Endpoint | Tavsif |
+|--------|----------|--------|
+| GET | `/api/dashboard/main/` | Umumiy moliyaviy ko'rinish |
+
+**Response namunasi:**
+```json
+{
+    "total_balance": 5000000,
+    "monthly": {
+        "income": 3000000,
+        "expense": 1000000,
+        "balance": 2000000
+    },
+    "transactions": [...],
+    "active_recurring": 3
+}
+```
+
+---
+
+## 🔄 Takrorlanuvchi Tranzaksiyalar (Management Command)
+
+Har kuni avtomatik ishga tushirish uchun:
+
+```bash
+python manage.py process_recurring
+```
+
+Bu command `next_run_date = bugun` bo'lgan barcha aktiv takrorlanuvchi tranzaksiyalardan avtomatik `Transaction` yaratadi va `next_run_date` ni yangilaydi.
+
+**Takrorlanish turlari:** `daily`, `weekly`, `monthly`, `yearly`
+
+---
+
+## 🛡️ N+1 Muammo Yechimi
+
+Barcha viewlarda `select_related` ishlatilgan:
+
+```python
+Transaction.objects.select_related('user', 'account', 'category', 'currency')
+```
+
+Bu 1 ta JOIN so'rovi bilan barcha bog'liq ma'lumotlarni olib keladi.
+
+---
+
+## 📖 Dokumentatsiya
+
+| Tur | Link |
+|-----|------|
+| 📮 Postman | [Postman Documentation](https://documenter.getpostman.com/view/54867148/2sBXwyFmmU) |
+| 📄 Swagger UI | [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/) |
+| 🔧 Swagger Schema | [http://127.0.0.1:8000/api/schema/](http://127.0.0.1:8000/api/schema/) |
+
+---

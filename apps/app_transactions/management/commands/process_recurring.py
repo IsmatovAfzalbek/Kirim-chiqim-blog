@@ -62,5 +62,4 @@ class Command(BaseCommand):
 
             recurring.save()
             count += 1
-
         self.stdout.write(self.style.SUCCESS(f"{count} ta tranzaksiya avtomatik yaratildi."))

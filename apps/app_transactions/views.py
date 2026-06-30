@@ -1,6 +1,5 @@
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .filters import TransactionFilter
@@ -15,9 +14,6 @@ from .serializers import TransactionSerializer, RecurringTransactionSerializer
 
 class TransactionListCreateView(APIView):
     permission_classes = [IsAuthenticated]
-    
-    class TransactionListCreateView(APIView):
-        permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.select_related(

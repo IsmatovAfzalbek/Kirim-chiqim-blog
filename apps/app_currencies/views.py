@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.db.models.deletion import ProtectedError
 
 
 from .models import Currency, ExchangeRate
@@ -76,12 +77,16 @@ class CurrencyDetailView(APIView):
         
     def delete(self, request, pk):
         currency = self.get_object(pk)
-        if not currency:
+        if currency is None:
             return Response({"error": "Valyuta topilmadi."}, status=status.HTTP_404_NOT_FOUND)
-            
-        currency.delete()
-        return Response({"message": "Valyuta o'chirildi."}, status=status.HTTP_200_OK)
-
+        
+        try:
+            currency.delete()
+            return Response({"message": "Valyuta o'chirildi."}, status=status.HTTP_204_NO_CONTENT)
+        except ProtectedError:
+            return Response({
+                "error": "Bu valyutaga bog'liq hisoblar mavjud. Avval ularni o'chiring."
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         
 class FetchRateView(APIView):

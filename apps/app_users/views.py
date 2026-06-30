@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-from .models import CustomUser
-from .serilaizers import RegisterSerializer, LoginSerializer, ProfileSerializer, ProfileUpdateSerializer
+from .serilaizers import RegisterSerializer, LoginSerializer,\
+    ProfileSerializer, ProfileUpdateSerializer
 
 
 
